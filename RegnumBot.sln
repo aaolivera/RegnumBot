@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Servicios", "Servicios\Servicios.csproj", "{4DB24110-E342-4918-9101-318E28DC2762}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dominio", "Dominio\Dominio.csproj", "{C277C96E-E401-43E2-AA84-5C0C5A1EFC94}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegnumBotWin", "RegnumBotWin\RegnumBotWin.csproj", "{D7E357C9-B9FA-4D36-87ED-C39FE30AE4CF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4DB24110-E342-4918-9101-318E28DC2762}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DB24110-E342-4918-9101-318E28DC2762}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DB24110-E342-4918-9101-318E28DC2762}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DB24110-E342-4918-9101-318E28DC2762}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C277C96E-E401-43E2-AA84-5C0C5A1EFC94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C277C96E-E401-43E2-AA84-5C0C5A1EFC94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C277C96E-E401-43E2-AA84-5C0C5A1EFC94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C277C96E-E401-43E2-AA84-5C0C5A1EFC94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7E357C9-B9FA-4D36-87ED-C39FE30AE4CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7E357C9-B9FA-4D36-87ED-C39FE30AE4CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7E357C9-B9FA-4D36-87ED-C39FE30AE4CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7E357C9-B9FA-4D36-87ED-C39FE30AE4CF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
