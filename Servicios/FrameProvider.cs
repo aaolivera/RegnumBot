@@ -4,8 +4,6 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Servicios
 {
@@ -16,16 +14,11 @@ namespace Servicios
     {
         private readonly IntPtr hwnd;//regnum.exe
         private static FrameProvider _frameProvider;
-        private Bitmap _ultimoFrame;
-        private static Mutex _m;
-        
+
         private FrameProvider(string processName)
         {
             var proc = Process.GetProcessesByName(processName)[0];
             hwnd = proc.MainWindowHandle;
-            _ultimoFrame = PrintWindow();
-            _m = new Mutex();
-            Task.Run(() => GetFrame());
         }
 
         public static FrameProvider GetFrameProvider(string processName)
@@ -35,39 +28,25 @@ namespace Servicios
 
         public Bitmap GetPartial(int cropX, int cropY, int cropWidth, int cropHeight)
         {
-            _m.WaitOne();
-            var partial = CropBitmap(_ultimoFrame, cropX, cropY, cropWidth, cropHeight);
-            _m.ReleaseMutex();
-            
+            var partial = PrintWindow(cropX, cropY, cropWidth, cropHeight);
             return partial;
         }
         
-        private void GetFrame()
-        {
-            while (true)
-            {
-                var temp = PrintWindow();
-                _m.WaitOne();
-                _ultimoFrame = temp;
-                _m.ReleaseMutex();
-                Thread.Sleep(300);
-            }
-        }
-        
-        private Bitmap PrintWindow()
+        private Bitmap PrintWindow(int cropX, int cropY, int cropWidth, int cropHeight)
         {
             Bitmap src = new Bitmap(2000, 1000, PixelFormat.Format32bppArgb);
             Graphics gfxBmp = Graphics.FromImage(src);
+
             IntPtr hdcBitmap = gfxBmp.GetHdc();
 
             PrintWindow(hwnd, hdcBitmap, 0);
 
             gfxBmp.ReleaseHdc(hdcBitmap);
             gfxBmp.Dispose();
-            
-            return src;
+
+            return CropBitmap(src, cropX, cropY, cropWidth, cropHeight);
         }
-        
+
         private Bitmap CropBitmap(Bitmap bitmap, int cropX, int cropY, int cropWidth, int cropHeight)
         {
             Rectangle rect = new Rectangle(cropX, cropY, cropWidth, cropHeight);
@@ -100,135 +79,9 @@ namespace Servicios
             grPhoto.Dispose();
             return bmPhoto;
         }
-
-        [DllImport("user32.dll")]
-        private static extern bool GetWindowRect(IntPtr hWnd, out RECT lpRect);
+        
         [DllImport("user32.dll")]
         private static extern bool PrintWindow(IntPtr hWnd, IntPtr hdcBlt, int nFlags);
-        [StructLayout(LayoutKind.Sequential)]
-        private struct RECT
-        {
-            private int _Left;
-            private int _Top;
-            private int _Right;
-            private int _Bottom;
-
-            public RECT(RECT Rectangle) : this(Rectangle.Left, Rectangle.Top, Rectangle.Right, Rectangle.Bottom)
-            {
-            }
-            public RECT(int Left, int Top, int Right, int Bottom)
-            {
-                _Left = Left;
-                _Top = Top;
-                _Right = Right;
-                _Bottom = Bottom;
-            }
-
-            public int X
-            {
-                get { return _Left; }
-                set { _Left = value; }
-            }
-            public int Y
-            {
-                get { return _Top; }
-                set { _Top = value; }
-            }
-            public int Left
-            {
-                get { return _Left; }
-                set { _Left = value; }
-            }
-            public int Top
-            {
-                get { return _Top; }
-                set { _Top = value; }
-            }
-            public int Right
-            {
-                get { return _Right; }
-                set { _Right = value; }
-            }
-            public int Bottom
-            {
-                get { return _Bottom; }
-                set { _Bottom = value; }
-            }
-            public int Height
-            {
-                get { return _Bottom - _Top; }
-                set { _Bottom = value + _Top; }
-            }
-            public int Width
-            {
-                get { return _Right - _Left; }
-                set { _Right = value + _Left; }
-            }
-            public Point Location
-            {
-                get { return new Point(Left, Top); }
-                set
-                {
-                    _Left = value.X;
-                    _Top = value.Y;
-                }
-            }
-            public Size Size
-            {
-                get { return new Size(Width, Height); }
-                set
-                {
-                    _Right = value.Width + _Left;
-                    _Bottom = value.Height + _Top;
-                }
-            }
-
-            public static implicit operator Rectangle(RECT Rectangle)
-            {
-                return new Rectangle(Rectangle.Left, Rectangle.Top, Rectangle.Width, Rectangle.Height);
-            }
-            public static implicit operator RECT(Rectangle Rectangle)
-            {
-                return new RECT(Rectangle.Left, Rectangle.Top, Rectangle.Right, Rectangle.Bottom);
-            }
-            public static bool operator ==(RECT Rectangle1, RECT Rectangle2)
-            {
-                return Rectangle1.Equals(Rectangle2);
-            }
-            public static bool operator !=(RECT Rectangle1, RECT Rectangle2)
-            {
-                return !Rectangle1.Equals(Rectangle2);
-            }
-
-            public override string ToString()
-            {
-                return "{Left: " + _Left + "; " + "Top: " + _Top + "; Right: " + _Right + "; Bottom: " + _Bottom + "}";
-            }
-
-            public override int GetHashCode()
-            {
-                return ToString().GetHashCode();
-            }
-
-            public bool Equals(RECT Rectangle)
-            {
-                return Rectangle.Left == _Left && Rectangle.Top == _Top && Rectangle.Right == _Right && Rectangle.Bottom == _Bottom;
-            }
-
-            public override bool Equals(object Object)
-            {
-                if (Object is RECT)
-                {
-                    return Equals((RECT)Object);
-                }
-                else if (Object is Rectangle)
-                {
-                    return Equals(new RECT((Rectangle)Object));
-                }
-
-                return false;
-            }
-        }
 
     }
 }
