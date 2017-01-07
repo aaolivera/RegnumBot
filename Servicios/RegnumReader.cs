@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Dominio;
 using Dominio.Handlers;
 using Tesseract;
@@ -14,6 +15,7 @@ namespace Servicios
     public class RegnumReader
     {
         private readonly FrameProvider _frameProvider;
+        private readonly MouseProvider _mouseProvider;
         private static RegnumReader _regnumReader;
         private readonly Dictionary<EventType, List<IFrameEventHandler>> _frameEventHandlers;
 
@@ -23,6 +25,7 @@ namespace Servicios
         private RegnumReader()
         {
             this._frameProvider = FrameProvider.GetFrameProvider("ROClientGame");
+            this._mouseProvider = MouseProvider.GetMouseProvider("ROClientGame");
             this._posicionCoordenadas = new Rectangle(0,0,220,200);
             this._posicionStats = new Rectangle(0, 0, 220, 100);
             this._frameEventHandlers = new Dictionary<EventType, List<IFrameEventHandler>>();
@@ -154,11 +157,11 @@ namespace Servicios
                     var r = rgbValues[index + 2];
                     var g = (rgbValues[index + 1]);
                     var b = (rgbValues[index]);
-                    if (r == 253 && g == 88 && b == 53)
+                    if (r == ColorProvider.RojoVida().R && g == ColorProvider.RojoVida().G && b == ColorProvider.RojoVida().B)
                     {
                         pixelRojo++;
                     }
-                    if (r == 53 && g == 217 && b == 253)
+                    if (r == ColorProvider.AzulMana().R && g == ColorProvider.AzulMana().G && b == ColorProvider.AzulMana().B)
                     {
                         pixelAzul++;
                     }
@@ -175,7 +178,79 @@ namespace Servicios
         //SELECCIONAR OBJETIVO
         public void ObtenerObjetivo()
         {
-            MouseProvider.GetMouseProvider("ROClientGame").PosicionarMouse(10,10);
+            var x = 32;
+            var y = 32;
+            while (true)
+            {
+                _mouseProvider.PosicionarMouse(x, y);
+                
+                var bit = _frameProvider.GetPartial((x > 30) ? x - 30 : x, (y > 30) ? y - 30 : y, 60, 60);
+                
+
+                if (LeerObjetivo(bit))
+                {
+                    EjecutarEvento(bit, EventType.ObjetivoBitmap);
+                    return;
+                }
+                EjecutarEvento(bit, EventType.ObjetivoBitmap);
+                if (x < 1500)
+                {
+                    x += 20;
+                }
+                else if (y < 200)
+                {
+                    x = 0;
+                    y += 30;
+                }
+                else
+                {
+                    return;
+                }
+            }
+        }
+
+        private bool LeerObjetivo(Bitmap bit)
+        {
+            BitmapData data = bit.LockBits(new Rectangle(0, 0, bit.Width, bit.Height), ImageLockMode.ReadOnly, bit.PixelFormat);
+
+            IntPtr ptr = data.Scan0;
+            int length = data.Stride * bit.Height; //Cantidad de bytes
+            var pixelSize = data.PixelFormat == PixelFormat.Format32bppArgb ? 4 : 3;
+            // only works with 32 or 24 pixel-size bitmap!
+            var padding = data.Stride - (data.Width * pixelSize);
+
+            byte[] rgbValues = new byte[length]; // Array del tamaño del bitmap
+
+            // Copy the RGB values into the array.
+            Marshal.Copy(ptr, rgbValues, 0, length);
+            
+            var index = 0;
+
+            for (var y = 0; y < data.Height; y++)
+            {
+                for (var x = 0; x < data.Width; x++)
+                {
+                    var r = rgbValues[index + 2];
+                    var g = (rgbValues[index + 1]);
+                    var b = (rgbValues[index]);
+                    var color = Color.FromArgb(r, g, b);
+                    if (color == ColorProvider.AzulNormal() ||
+                        color == ColorProvider.VerdeFacil() ||
+                        color == ColorProvider.VerdeMuyFacil()
+                        )
+                    {
+                        bit.UnlockBits(data);
+                        return true;
+                    }
+
+                    index += pixelSize;
+                }
+
+                index += padding;
+            }
+            bit.UnlockBits(data);
+            
+            return false;
         }
 
         //EVENTOS

@@ -23,6 +23,7 @@ namespace RegnumBotWin
             RegnumReader.GetRegnumReader().RegistrarHandler(EventType.CoordenadasBitmap, new FrameEventHandler(CoordenadasImg));
             RegnumReader.GetRegnumReader().RegistrarHandler(EventType.CoordenadasTexto, new TextEventHandler(coordenadasText));
             RegnumReader.GetRegnumReader().RegistrarHandler(EventType.StatsBitmap, new FrameEventHandler(VidaImg));
+            RegnumReader.GetRegnumReader().RegistrarHandler(EventType.ObjetivoBitmap, new FrameEventHandler(VidaImg));
 
             Consola.Text += "Iniciando Busqueda de Coordenadas y Stats..." + "\r\n";
             Task.Run(() => BuscarCoordenadas());
@@ -33,6 +34,11 @@ namespace RegnumBotWin
         {
             var encontrada = RegnumReader.GetRegnumReader().BuscarStats();
             Consola.Text += "Vida y Mana" + (encontrada != null ? $" encontradas {encontrada.Vida}% / {encontrada.Mana}%" : " no encontradas") + "\r\n";
+            if (encontrada == null)
+            {
+                Thread.Sleep(200);
+                BuscarStats();
+            }
         }
 
         private void ObtenerStats()
@@ -53,6 +59,11 @@ namespace RegnumBotWin
             Consola.Text += "Coordenadas" + (encontrada != null ? $"{encontrada.X} : {encontrada.Y}" : " no encontradas") + "\r\n";
         }
 
+        private void ObtenerObjetivo()
+        {
+            RegnumReader.GetRegnumReader().ObtenerObjetivo();
+        }
+
         private void textBox1_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -70,7 +81,7 @@ namespace RegnumBotWin
                 }
                 if (comando == "oo")
                 {
-                    RegnumReader.GetRegnumReader().ObtenerObjetivo();
+                    Task.Run(() => ObtenerObjetivo());
                 }
             }
         }

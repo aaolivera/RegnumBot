@@ -26,13 +26,13 @@ namespace Servicios
             return _frameProvider ?? (_frameProvider = new FrameProvider(processName));
         }
 
-        public Bitmap GetPartial(int cropX, int cropY, int cropWidth, int cropHeight)
+        public Bitmap GetPartial(int x, int y, int cropWidth, int cropHeight)
         {
-            var partial = PrintWindow(cropX, cropY, cropWidth, cropHeight);
+            var partial = PrintWindow(x, y, cropWidth, cropHeight);
             return partial;
         }
         
-        private Bitmap PrintWindow(int cropX, int cropY, int cropWidth, int cropHeight)
+        private Bitmap PrintWindow(int x, int y, int cropWidth, int cropHeight)
         {
             Bitmap src = new Bitmap(2000, 1000, PixelFormat.Format32bppArgb);
             Graphics gfxBmp = Graphics.FromImage(src);
@@ -42,16 +42,17 @@ namespace Servicios
             PrintWindow(hwnd, hdcBitmap, 0);
 
             gfxBmp.ReleaseHdc(hdcBitmap);
-            gfxBmp.Dispose();
 
-            return CropBitmap(src, cropX, cropY, cropWidth, cropHeight);
+            var retorno = CropBitmap(src, x, y, cropWidth, cropHeight);
+            src.Dispose();
+            gfxBmp.Dispose();
+            return retorno;
         }
 
-        private Bitmap CropBitmap(Bitmap bitmap, int cropX, int cropY, int cropWidth, int cropHeight)
+        private Bitmap CropBitmap(Bitmap bitmap, int x, int y, int cropWidth, int cropHeight)
         {
-            Rectangle rect = new Rectangle(cropX, cropY, cropWidth, cropHeight);
-            Bitmap cropped = new Bitmap(bitmap.Clone(rect, bitmap.PixelFormat));
-            return cropped;
+            Rectangle rect = new Rectangle(x, y, cropWidth, cropHeight);
+            return new Bitmap(bitmap.Clone(rect, bitmap.PixelFormat));
         }
 
         public Bitmap ScaleByPercent(Bitmap imgPhoto, int percent)

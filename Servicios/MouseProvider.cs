@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace Servicios
 {
@@ -22,9 +24,9 @@ namespace Servicios
 
         public void PosicionarMouse(int x, int y)
         {
-            Win32.POINT p = new Win32.POINT {x = x,y = y};
+            Win32.POINT p = new Win32.POINT {x = x * 72 / 90, y = y * 72 / 96 };
             Win32.ClientToScreen(hwnd, ref p);
-            Win32.SetCursorPos(p.x, p.y);
+            Win32.SetCursorPos((p.x ), (p.y ));
         }
 
     }

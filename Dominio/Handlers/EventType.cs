@@ -5,6 +5,7 @@
         CoordenadasBitmap,
         CoordenadasTexto,
         StatsBitmap,
-        StatsTexto
+        StatsTexto,
+        ObjetivoBitmap
     }
 }
