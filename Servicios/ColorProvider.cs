@@ -1,9 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
+﻿using System.Drawing;
 
 namespace Servicios
 {
@@ -12,6 +7,11 @@ namespace Servicios
     /// </summary>
     public static class ColorProvider
     {
+        public static Color[] Piedra()
+        {
+            return new [] { Color.FromArgb(253, 88, 53), Color.FromArgb(253, 88, 53) , Color.FromArgb(253, 88, 53) };
+        }
+
         public static Color RojoVida()
         {
             return Color.FromArgb(253, 88, 53);

@@ -31,7 +31,12 @@ namespace Servicios
             var partial = PrintWindow(x, y, cropWidth, cropHeight);
             return partial;
         }
-        
+
+        public Bitmap PrintWindow()
+        {
+            return PrintWindow(32, 32, 1600, 900);
+        }
+
         private Bitmap PrintWindow(int x, int y, int cropWidth, int cropHeight)
         {
             Bitmap src = new Bitmap(2000, 1000, PixelFormat.Format32bppArgb);
@@ -84,5 +89,17 @@ namespace Servicios
         [DllImport("user32.dll")]
         private static extern bool PrintWindow(IntPtr hWnd, IntPtr hdcBlt, int nFlags);
 
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool GetWindowRect(HandleRef hWnd, out RECT lpRect);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct RECT
+        {
+            public int Left;        // x position of upper-left corner
+            public int Top;         // y position of upper-left corner
+            public int Right;       // x position of lower-right corner
+            public int Bottom;      // y position of lower-right corner
+        }
     }
 }

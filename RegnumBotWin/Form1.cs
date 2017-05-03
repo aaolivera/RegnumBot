@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,10 +25,11 @@ namespace RegnumBotWin
             RegnumReader.GetRegnumReader().RegistrarHandler(EventType.CoordenadasTexto, new TextEventHandler(coordenadasText));
             RegnumReader.GetRegnumReader().RegistrarHandler(EventType.StatsBitmap, new FrameEventHandler(VidaImg));
             RegnumReader.GetRegnumReader().RegistrarHandler(EventType.ObjetivoBitmap, new FrameEventHandler(VidaImg));
+            RegnumReader.GetRegnumReader().RegistrarHandler(EventType.PiedraBitmap, new FrameEventHandler(pictureBox1));
 
             Consola.Text += "Iniciando Busqueda de Coordenadas y Stats..." + "\r\n";
-            Task.Run(() => BuscarCoordenadas());
-            Task.Run(() => BuscarStats());
+            //Task.Run(() => BuscarCoordenadas());
+            //Task.Run(() => BuscarStats());
         }
 
         private void BuscarStats()
@@ -59,6 +61,16 @@ namespace RegnumBotWin
             Consola.Text += "Coordenadas" + (encontrada != null ? $"{encontrada.X} : {encontrada.Y}" : " no encontradas") + "\r\n";
         }
 
+        private void ObtenerPiedra()
+        {
+            var k = 0;
+            Point? encontrada = null;
+            var a = DateTime.Now;
+            encontrada = RegnumReader.GetRegnumReader().ObtenerPiedra();
+            var b = (DateTime.Now - a).Milliseconds;
+            Consola.Text += " Tiempo: " + b + "///  encontradas " + (encontrada?.ToString() ?? "no") + "/// cantidad " + k + "\r\n";
+        }
+
         private void ObtenerObjetivo()
         {
             RegnumReader.GetRegnumReader().ObtenerObjetivo();
@@ -82,6 +94,10 @@ namespace RegnumBotWin
                 if (comando == "oo")
                 {
                     Task.Run(() => ObtenerObjetivo());
+                }
+                if (comando == "op")
+                {
+                    Task.Run(() => ObtenerPiedra());
                 }
             }
         }

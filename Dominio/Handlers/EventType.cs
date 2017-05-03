@@ -6,6 +6,7 @@
         CoordenadasTexto,
         StatsBitmap,
         StatsTexto,
-        ObjetivoBitmap
+        ObjetivoBitmap,
+        PiedraBitmap
     }
 }
