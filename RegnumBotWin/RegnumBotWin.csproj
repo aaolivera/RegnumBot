@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
+    </Reference>
     <Reference Include="NReco.PhantomJS, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Screenshot.1.0.0\lib\NReco.PhantomJS.dll</HintPath>
       <Private>True</Private>
@@ -92,6 +95,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Dependencias\Dependencias.csproj">
+      <Project>{2c2d07b6-091b-465c-9cca-4b3c5ce89542}</Project>
+      <Name>Dependencias</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Dominio\Dominio.csproj">
       <Project>{C277C96E-E401-43E2-AA84-5C0C5A1EFC94}</Project>
       <Name>Dominio</Name>
@@ -105,6 +112,9 @@
     <Content Include="NReco.PhantomJS.xml" />
     <Content Include="phantomjs-license.txt" />
     <Content Include="phantomjs.exe" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

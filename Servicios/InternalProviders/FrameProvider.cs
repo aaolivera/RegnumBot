@@ -5,7 +5,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-namespace Servicios
+namespace Servicios.InternalProviders
 {
     /// <summary>
     /// Provides functions to capture the entire screen, or a particular window, and save it to a file.
@@ -13,19 +13,13 @@ namespace Servicios
     public class FrameProvider
     {
         private readonly IntPtr hwnd;//regnum.exe
-        private static FrameProvider _frameProvider;
 
-        private FrameProvider(string processName)
+        public FrameProvider(string processName)
         {
             var proc = Process.GetProcessesByName(processName)[0];
             hwnd = proc.MainWindowHandle;
         }
-
-        public static FrameProvider GetFrameProvider(string processName)
-        {
-            return _frameProvider ?? (_frameProvider = new FrameProvider(processName));
-        }
-
+        
         public Bitmap GetPartial(int x, int y, int cropWidth, int cropHeight)
         {
             var partial = PrintWindow(x, y, cropWidth, cropHeight);
@@ -69,10 +63,8 @@ namespace Servicios
             var destWidth = (int)(sourceWidth * nPercent);
             var destHeight = (int)(sourceHeight * nPercent);
 
-            var bmPhoto = new Bitmap(destWidth, destHeight,
-                PixelFormat.Format24bppRgb);
-            bmPhoto.SetResolution(imgPhoto.HorizontalResolution,
-                imgPhoto.VerticalResolution);
+            var bmPhoto = new Bitmap(destWidth, destHeight, PixelFormat.Format24bppRgb);
+            bmPhoto.SetResolution(imgPhoto.HorizontalResolution, imgPhoto.VerticalResolution);
 
             Graphics grPhoto = Graphics.FromImage(bmPhoto);
             grPhoto.InterpolationMode = InterpolationMode.HighQualityBicubic;
@@ -81,7 +73,7 @@ namespace Servicios
                 new System.Drawing.Rectangle(0, 0, destWidth, destHeight),
                 new System.Drawing.Rectangle(0, 0, sourceWidth, sourceHeight),
                 GraphicsUnit.Pixel);
-            bmPhoto.Save(@"D:\Scale.png", System.Drawing.Imaging.ImageFormat.Png);
+            //bmPhoto.Save(@"D:\Scale.png", System.Drawing.Imaging.ImageFormat.Png);
             grPhoto.Dispose();
             return bmPhoto;
         }

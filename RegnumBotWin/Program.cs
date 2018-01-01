@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Dependencias;
+using Ninject;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,7 +18,9 @@ namespace RegnumBotWin
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            var kernel = new StandardKernel(new NinjectRoModule());
+            var form = kernel.Get<Form1>();
+            Application.Run(form);
         }
     }
 }

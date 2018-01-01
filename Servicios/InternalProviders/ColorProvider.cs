@@ -1,11 +1,11 @@
 ﻿using System.Drawing;
 
-namespace Servicios
+namespace Servicios.InternalProviders
 {
     /// <summary>
     /// Provides functions to capture the entire screen, or a particular window, and save it to a file.
     /// </summary>
-    public static class ColorProvider
+    public class ColorProvider
     {
         public static Color[] Piedra()
         {

@@ -6,58 +6,47 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Dominio.Handlers;
 using RegnumBotWin.Handlers;
-using Servicios;
+using Servicios.RegnumProviders;
 
 namespace RegnumBotWin
 {
     public partial class Form1 : Form
     {
-        public Form1()
+        private readonly CoordenadasProvider coordenadasProvider;
+        private readonly StatsProvider statsProvider;
+        private readonly ObjetivoProvider objetivoProvider;
+        private readonly PiedraProvider piedraProvider;
+
+        public Form1(CoordenadasProvider coordenadasProvider, StatsProvider statsProvider, ObjetivoProvider objetivoProvider, PiedraProvider piedraProvider)
         {
             InitializeComponent();
+            this.coordenadasProvider = coordenadasProvider;
+            this.statsProvider = statsProvider;
+            this.objetivoProvider = objetivoProvider;
+            this.piedraProvider = piedraProvider;
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             CheckForIllegalCrossThreadCalls = false;
 
-            RegnumReader.GetRegnumReader().RegistrarHandler(EventType.CoordenadasBitmap, new FrameEventHandler(CoordenadasImg));
-            RegnumReader.GetRegnumReader().RegistrarHandler(EventType.CoordenadasTexto, new TextEventHandler(coordenadasText));
-            RegnumReader.GetRegnumReader().RegistrarHandler(EventType.StatsBitmap, new FrameEventHandler(VidaImg));
-            RegnumReader.GetRegnumReader().RegistrarHandler(EventType.ObjetivoBitmap, new FrameEventHandler(VidaImg));
-            RegnumReader.GetRegnumReader().RegistrarHandler(EventType.PiedraBitmap, new FrameEventHandler(pictureBox1));
-
-            Consola.Text += "Iniciando Busqueda de Coordenadas y Stats..." + "\r\n";
-            //Task.Run(() => BuscarCoordenadas());
-            //Task.Run(() => BuscarStats());
+            coordenadasProvider.RegistrarHandler(EventType.CoordenadasBitmap, new FrameEventHandler(CoordenadasImg));
+            coordenadasProvider.RegistrarHandler(EventType.CoordenadasTexto, new TextEventHandler(coordenadasText));
+            statsProvider.RegistrarHandler(EventType.StatsBitmap, new FrameEventHandler(VidaImg));
+            objetivoProvider.RegistrarHandler(EventType.ObjetivoBitmap, new FrameEventHandler(VidaImg));
+            piedraProvider.RegistrarHandler(EventType.PiedraBitmap, new FrameEventHandler(pictureBox1));
+            
         }
-
-        private void BuscarStats()
-        {
-            var encontrada = RegnumReader.GetRegnumReader().BuscarStats();
-            Consola.Text += "Vida y Mana" + (encontrada != null ? $" encontradas {encontrada.Vida}% / {encontrada.Mana}%" : " no encontradas") + "\r\n";
-            if (encontrada == null)
-            {
-                Thread.Sleep(200);
-                BuscarStats();
-            }
-        }
-
+        
         private void ObtenerStats()
         {
-            var encontrada = RegnumReader.GetRegnumReader().ObtenerStats();
+            var encontrada = statsProvider.Obtener();
             Consola.Text += "Vida y Mana" + (encontrada != null ? $"{encontrada.Vida}% / {encontrada.Mana}%" : " no encontradas") + "\r\n";
         }
-
-        private void BuscarCoordenadas()
-        {
-            var encontrada = RegnumReader.GetRegnumReader().BuscarCoordenadas();
-            Consola.Text += "Coordenadas" + (encontrada != null ? $" encontradas {encontrada.X} : {encontrada.Y}" : " no encontradas") + "\r\n";
-        }
-
+        
         private void ObtenerCoordenadas()
         {
-            var encontrada = RegnumReader.GetRegnumReader().ObtenerCoordenadas();
+            var encontrada = coordenadasProvider.Obtener();
             Consola.Text += "Coordenadas" + (encontrada != null ? $"{encontrada.X} : {encontrada.Y}" : " no encontradas") + "\r\n";
         }
 
@@ -66,14 +55,14 @@ namespace RegnumBotWin
             var k = 0;
             Point? encontrada = null;
             var a = DateTime.Now;
-            encontrada = RegnumReader.GetRegnumReader().ObtenerPiedra();
+            encontrada = piedraProvider.Obtener();
             var b = (DateTime.Now - a).Milliseconds;
             Consola.Text += " Tiempo: " + b + "///  encontradas " + (encontrada?.ToString() ?? "no") + "/// cantidad " + k + "\r\n";
         }
 
         private void ObtenerObjetivo()
         {
-            RegnumReader.GetRegnumReader().ObtenerObjetivo();
+            objetivoProvider.Obtener();
         }
 
         private void textBox1_KeyDown(object sender, KeyEventArgs e)

@@ -4,22 +4,16 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
-namespace Servicios
+namespace Servicios.InternalProviders
 {
     public class MouseProvider
     {
         private readonly IntPtr hwnd;//regnum.exe
-        private static MouseProvider _mouseProvider;
 
-        private MouseProvider(string processName)
+        public MouseProvider(string processName)
         {
             var proc = Process.GetProcessesByName(processName)[0];
             hwnd = proc.MainWindowHandle;
-        }
-
-        public static MouseProvider GetMouseProvider(string processName)
-        {
-            return _mouseProvider ?? (_mouseProvider = new MouseProvider(processName));
         }
 
         public void PosicionarMouse(int x, int y)
