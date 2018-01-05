@@ -1,11 +1,8 @@
 ﻿using Dominio;
 using Dominio.Handlers;
 using Servicios.InternalProviders;
-using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Text.RegularExpressions;
-using Tesseract;
 
 namespace Servicios.RegnumProviders
 {

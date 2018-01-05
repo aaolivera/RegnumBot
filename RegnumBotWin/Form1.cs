@@ -53,7 +53,7 @@ namespace RegnumBotWin
             if(encontrada != null)
             {
                 Consola.Text += " Entregar carta desde: " + encontrada.Desde + " hasta " + encontrada.Hasta + "\r\n";
-            }            
+            }
         }
 
         private void ObtenerCoordenadas()

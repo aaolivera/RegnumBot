@@ -49,6 +49,7 @@
     <Compile Include="InternalProviders\ColorProvider.cs" />
     <Compile Include="InternalProviders\FrameProvider.cs" />
     <Compile Include="InternalProviders\MouseProvider.cs" />
+    <Compile Include="RegnumProviders\MapaProvider.cs" />
     <Compile Include="RegnumProviders\AventuraProvider.cs" />
     <Compile Include="RegnumProviders\PiedraProvider.cs" />
     <Compile Include="RegnumProviders\ObjetivoProvider.cs" />
