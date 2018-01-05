@@ -16,14 +16,16 @@ namespace RegnumBotWin
         private readonly StatsProvider statsProvider;
         private readonly ObjetivoProvider objetivoProvider;
         private readonly PiedraProvider piedraProvider;
+        private readonly AventuraProvider aventuraProvider;
 
-        public Form1(CoordenadasProvider coordenadasProvider, StatsProvider statsProvider, ObjetivoProvider objetivoProvider, PiedraProvider piedraProvider)
+        public Form1(CoordenadasProvider coordenadasProvider, StatsProvider statsProvider, ObjetivoProvider objetivoProvider, PiedraProvider piedraProvider, AventuraProvider aventuraProvider)
         {
             InitializeComponent();
             this.coordenadasProvider = coordenadasProvider;
             this.statsProvider = statsProvider;
             this.objetivoProvider = objetivoProvider;
             this.piedraProvider = piedraProvider;
+            this.aventuraProvider = aventuraProvider;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -32,10 +34,11 @@ namespace RegnumBotWin
 
             coordenadasProvider.RegistrarHandler(EventType.CoordenadasBitmap, new FrameEventHandler(CoordenadasImg));
             coordenadasProvider.RegistrarHandler(EventType.CoordenadasTexto, new TextEventHandler(coordenadasText));
+            aventuraProvider.RegistrarHandler(EventType.AventuraBitmap, new FrameEventHandler(CoordenadasImg));
+            aventuraProvider.RegistrarHandler(EventType.AventuraTexto, new TextEventHandler(coordenadasText));
             statsProvider.RegistrarHandler(EventType.StatsBitmap, new FrameEventHandler(VidaImg));
             objetivoProvider.RegistrarHandler(EventType.ObjetivoBitmap, new FrameEventHandler(VidaImg));
             piedraProvider.RegistrarHandler(EventType.PiedraBitmap, new FrameEventHandler(pictureBox1));
-            
         }
         
         private void ObtenerStats()
@@ -43,7 +46,16 @@ namespace RegnumBotWin
             var encontrada = statsProvider.Obtener();
             Consola.Text += "Vida y Mana" + (encontrada != null ? $"{encontrada.Vida}% / {encontrada.Mana}%" : " no encontradas") + "\r\n";
         }
-        
+
+        private void ObtenerAventura()
+        {
+            var encontrada = aventuraProvider.Obtener();
+            if(encontrada != null)
+            {
+                Consola.Text += " Entregar carta desde: " + encontrada.Desde + " hasta " + encontrada.Hasta + "\r\n";
+            }            
+        }
+
         private void ObtenerCoordenadas()
         {
             var encontrada = coordenadasProvider.Obtener();
@@ -87,6 +99,10 @@ namespace RegnumBotWin
                 if (comando == "op")
                 {
                     Task.Run(() => ObtenerPiedra());
+                }
+                if (comando == "oa")
+                {
+                    Task.Run(() => ObtenerAventura());
                 }
             }
         }

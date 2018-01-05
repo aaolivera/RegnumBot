@@ -28,11 +28,11 @@ namespace Servicios.RegnumProviders
                     _encontradas = true;
                     return coord;
                 }
-                if (_posicionCoordenadas.X < 1500 && !_encontradas)
+                if (_posicionCoordenadas.X < (_frameProvider.Width - _posicionCoordenadas.Width) && !_encontradas)
                 {
                     _posicionCoordenadas.X += 20;
                 }
-                else if (_posicionCoordenadas.Y < 1000 && !_encontradas)
+                else if (_posicionCoordenadas.Y < (_frameProvider.Height - _posicionCoordenadas.Height) && !_encontradas)
                 {
                     _posicionCoordenadas.X = 0;
                     _posicionCoordenadas.Y += 30;
@@ -48,7 +48,7 @@ namespace Servicios.RegnumProviders
         private Coordenada Leer()
         {
             var bit = _frameProvider.GetPartial(_posicionCoordenadas.X, _posicionCoordenadas.Y, _posicionCoordenadas.Width, _posicionCoordenadas.Height);
-            var texto = LeerImagen(_frameProvider.ScaleByPercent(bit, 500));
+            var texto = LeerImagen(_frameProvider.ScaleByPercent(bit, 10));
 
             EjecutarEvento(bit, EventType.CoordenadasBitmap);
             EjecutarEvento(texto, EventType.CoordenadasTexto);
@@ -58,30 +58,6 @@ namespace Servicios.RegnumProviders
             var x = match.Groups[1];
             var y = match.Groups[2];
             return match.Length > 1 ? new Coordenada { X = Convert.ToDecimal(x.Value.Replace('.', ',')), Y = Convert.ToDecimal(y.Value.Replace('.', ',')) } : null;
-        }
-
-        private string LeerImagen(Bitmap bit)
-        {
-            string text = "";
-
-            try
-            {
-                using (var engine = new TesseractEngine(@"./tessdata", "eng", EngineMode.Default))
-                {
-                    using (var page = engine.Process(bit))
-                    {
-                        text = page.GetText();
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Trace.TraceError(e.ToString());
-                Console.WriteLine("Unexpected Error: " + e.Message);
-                Console.WriteLine("Details: ");
-                Console.WriteLine(e.ToString());
-            }
-            return text;
         }
     }
 }

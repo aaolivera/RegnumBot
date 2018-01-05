@@ -14,6 +14,9 @@ namespace Servicios.InternalProviders
     {
         private readonly IntPtr hwnd;//regnum.exe
 
+        public int Width = 1600;
+        public int Height = 900;
+
         public FrameProvider(string processName)
         {
             var proc = Process.GetProcessesByName(processName)[0];
@@ -28,7 +31,7 @@ namespace Servicios.InternalProviders
 
         public Bitmap PrintWindow()
         {
-            return PrintWindow(32, 32, 1600, 900);
+            return PrintWindow(32, 32, Height, Width);
         }
 
         private Bitmap PrintWindow(int x, int y, int cropWidth, int cropHeight)
@@ -54,10 +57,8 @@ namespace Servicios.InternalProviders
             return new Bitmap(bitmap.Clone(rect, bitmap.PixelFormat));
         }
 
-        public Bitmap ScaleByPercent(Bitmap imgPhoto, int percent)
+        public Bitmap ScaleByPercent(Bitmap imgPhoto, int nPercent)
         {
-            float nPercent = ((float)percent / 100);
-
             int sourceWidth = imgPhoto.Width;
             int sourceHeight = imgPhoto.Height;
             var destWidth = (int)(sourceWidth * nPercent);

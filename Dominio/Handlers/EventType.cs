@@ -4,6 +4,8 @@
     {
         CoordenadasBitmap,
         CoordenadasTexto,
+        AventuraBitmap,
+        AventuraTexto,
         StatsBitmap,
         StatsTexto,
         ObjetivoBitmap,

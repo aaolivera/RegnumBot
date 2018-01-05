@@ -1,6 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
 using Dominio.Handlers;
 using Servicios.InternalProviders;
+using Tesseract;
 
 namespace Servicios.RegnumProviders
 {
@@ -16,7 +20,31 @@ namespace Servicios.RegnumProviders
             this._mouseProvider = mouseProvider;
             this._frameEventHandlers = new Dictionary<EventType, List<IFrameEventHandler>>();
         }
-        
+
+        protected string LeerImagen(Bitmap bit)
+        {
+            string text = "";
+
+            try
+            {
+                using (var engine = new TesseractEngine(@"./tessdata", "eng", EngineMode.Default))
+                {
+                    using (var page = engine.Process(bit))
+                    {
+                        text = page.GetText();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Trace.TraceError(e.ToString());
+                Console.WriteLine("Unexpected Error: " + e.Message);
+                Console.WriteLine("Details: ");
+                Console.WriteLine(e.ToString());
+            }
+            return text;
+        }
+
         //EVENTOS
         protected void EjecutarEvento(object obj, EventType name)
         {
