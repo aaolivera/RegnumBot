@@ -5,11 +5,14 @@
 @section scripts {
     <script src="~/Scripts/index.js"></script>
 }
-<div class="jumbotron" >
-    <p id="consola"></p>
-</div>
-<div class="row">
-    <div style="text-align:center;">
-        <canvas id="myCanvas" width="3100" height="3800"></canvas>
+    <div class="jumbotron">
+        <button type="button" id="abrir" class="btn btn-default buttonFijo">Abrir</button>
+        <button type="button" id="guardar" class="btn btn-default buttonFijo">Guardar</button>
+        <input type='file' id="abrirOculto" class="hide" accept='text/plain' onchange='abrir(event)'>
+        <p id="consola"></p>
     </div>
-</div>
+    <div class="row">
+        <div style="text-align:center;width: 100%;">
+            <canvas id="myCanvas" width="2300" height="2500"></canvas>
+        </div>
+    </div>
