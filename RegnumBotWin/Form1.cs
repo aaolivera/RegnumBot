@@ -59,7 +59,7 @@ namespace RegnumBotWin
         private void ObtenerCoordenadas()
         {
             var encontrada = coordenadasProvider.Obtener();
-            Consola.Text += "Coordenadas" + (encontrada != null ? $"{encontrada.X} : {encontrada.Y}" : " no encontradas") + "\r\n";
+            Consola.Text += "Coordenadas" + (encontrada != null ? $"{encontrada.Posicion.X} : {encontrada.Posicion.Y}" : " no encontradas") + "\r\n";
         }
 
         private void ObtenerPiedra()

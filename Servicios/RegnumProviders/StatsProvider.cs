@@ -60,8 +60,6 @@ namespace Servicios.RegnumProviders
 
             // Copy the RGB values into the array.
             Marshal.Copy(ptr, rgbValues, 0, length);
-
-            int count = 0;
             pixelRojo = 0;
             pixelAzul = 0;
 

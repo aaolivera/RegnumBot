@@ -55,9 +55,11 @@ namespace Servicios.RegnumProviders
 
             // First we see the input string.
             Match match = Regex.Match(texto, @"pos: ([0-9]{4}\.[0-9]{2}),([0-9]{4}\.[0-9]{2})", RegexOptions.IgnoreCase);
-            var x = match.Groups[1];
-            var y = match.Groups[2];
-            return match.Length > 1 ? new Coordenada { X = Convert.ToDecimal(x.Value.Replace('.', ',')), Y = Convert.ToDecimal(y.Value.Replace('.', ',')) } : null;
+
+            if (match.Groups.Count < 3 || match.Groups[1].Length == 0 || match.Groups[1].Length == 0) return null;
+            
+            var pos = new Point(Convert.ToInt32(match.Groups[1].Value.Substring(0,4)), Convert.ToInt32(match.Groups[2].Value.Substring(0, 4)));
+            return new Coordenada { Posicion = pos };
         }
     }
 }

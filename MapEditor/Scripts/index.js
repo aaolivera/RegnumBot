@@ -64,7 +64,7 @@ function drawCanvas(ctx, mapa) {
         }
     };
 
-    imageObj.src = 'http://localhost:56745/Img/Mapa.png';
+    imageObj.src = mapaUrl;
 }
 
 function drawCelda(ctx, x , y, color) {

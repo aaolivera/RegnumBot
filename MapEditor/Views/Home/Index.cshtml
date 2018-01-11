@@ -3,6 +3,9 @@
 }
 
 @section scripts {
+    <script type="text/javascript">
+        mapaUrl = "@Url.Content("~/Img/Mapa.png")";
+    </script>
     <script src="~/Scripts/index.js"></script>
 }
     <div class="jumbotron">
@@ -12,7 +15,5 @@
         <p id="consola"></p>
     </div>
     <div class="row">
-        <div style="text-align:center;width: 100%;">
             <canvas id="myCanvas" width="2300" height="2500"></canvas>
-        </div>
     </div>
