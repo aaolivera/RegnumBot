@@ -1,133 +1,139 @@
-﻿var ancho = 1;
+﻿function Nodo(x, y) {
+    var self = this;
+    self.Radio = 6;
+    self.X = x;
+    self.Y = y;
+    self.HayInterseccion = function (x, y) {
+        var distancia = Math.sqrt((self.X - x) * (self.X - x) + (self.Y - y) * (self.Y - y));
+        return distancia <= self.Radio;
+    }
+    self.Seleccionado = false;
+    self.NodosAsociados = [];
+}
+
+function Mapa() {
+    var self = this;
+    self.Nodos = [];
+
+    self.OrdenarNodos = function () {
+        self.Nodos.sort(function (a, b) {
+            if (a.X === b.X) return (a.Y < b.Y) ? -1 : (a.Y > b.Y) ? 1 : 0;
+            return a.X < b.Y ? -1 : 0;
+        });
+    }
+
+    self.SeleccionarNodo = function (x, y) {
+        for (var i = 0; i < self.Nodos.length; i++) {
+            if (self.Nodos[i].HayInterseccion(x, y)) {
+                return self.Nodos[i];
+            }
+        }
+        return null;
+    }
+
+    self.ObtenerNodo = function (x, y) {
+        var nodo = self.SeleccionarNodo(x, y);
+        if (nodo === null) {
+            nodo = new Nodo(x, y);
+            self.Nodos.push(nodo);
+        }
+        self.OrdenarNodos();
+        return nodo;
+    }
+
+}
+
 $(document).ready(function () {
-    var mapa = inicializarMapa();
+    var mapa = new Mapa();
     var canvas = document.getElementById('myCanvas');
     var ctx = canvas.getContext('2d');
-    drawCanvas(ctx, mapa);
+    //drawCanvas(ctx, mapa);
 
 
     var mouseIsDown = false;
-
+    var nodoSeleccionado;
     canvas.onmousedown = function (e) {
-        mouseIsDown = true;
-        onclick(ctx, e, mapa);
+        if (event.which === 1 || event.which === 3) {
+            mouseIsDown = true;
+            nodoSeleccionado = onclick(ctx, e, mapa);
+            drawCanvas(ctx, canvas, mapa);
+        }
     }
     canvas.onmouseup = function (e) {
         mouseIsDown = false;
+        if (event.which === 1) {
+            onUpLeftClick(ctx, e, mapa, nodoSeleccionado);
+            drawCanvas(ctx, canvas, mapa);
+        }
         return false;
     }
 
     canvas.onmousemove = function (e) {
         if (!mouseIsDown) return;
-        onclick(ctx, e, mapa);
-
+        if(event.which === 3) {
+            onMoveRigthClick(ctx, e, mapa, nodoSeleccionado);
+        }
         return false;
     }
     document.addEventListener('contextmenu', event => event.preventDefault());
 
-    $("#guardar").click(function () {
-        guardar(mapa);
-    });
-
-    $("#abrir").click(function () {
-        document.getElementById('abrirOculto').click();
-    });
 });
 
-function inicializarMapa() {
-    var filas = [];
-    dimension = 3000;
-    for (var i = 0; i < dimension; ++i) {
-        var fila = [];
-        for (var j = 0; j < dimension; ++j) {
-            fila.push(0);
-        }
-        filas.push(fila);
+function drawCanvas(ctx, canvas, mapa) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //var imageObj = new Image();
+
+    //imageObj.onload = function () {
+    //    //Dibujo imagen
+    //    //ctx.drawImage(imageObj, 0, 0, imageObj.width / 3, imageObj.height / 3);
+
+    //    //Dibujo los caminos
+        
+    //};
+
+    for (var i = 0; i < mapa.Nodos.length; i++) {
+        var nodo = mapa.Nodos[i];
+        ctx.beginPath();
+        ctx.arc(nodo.X, nodo.Y, nodo.Radio, 0, 2 * Math.PI);
+        ctx.fillStyle = 'orange';
+        ctx.fill();
+        ctx.lineWidth = nodo.Seleccionado ? 4 : 2;
+        ctx.strokeStyle = 'black';
     }
-
-    return filas;
-}
-
-function drawCanvas(ctx, mapa) {
-    var imageObj = new Image();
-
-    imageObj.onload = function () {
-        //Dibujo imagen
-        ctx.drawImage(imageObj, 0, 0, imageObj.width / 3, imageObj.height / 3);
-
-        //Dibujo los caminos
-        for (var i = 0; i < mapa.length; i++) {
-            var fila = mapa[i];
-            for (var j = 0; j < fila.length; j++) {
-                drawCelda(ctx,j , i, fila[j]);
-            }
-        }
-    };
-
-    imageObj.src = mapaUrl;
-}
-
-function drawCelda(ctx, x , y, color) {
-    ctx.lineWidth = 0.3;
-    if (color == 1) {
-        ctx.fillStyle = "blue";
-        ctx.fillRect(x, y, ancho, ancho);
-    }
-    if (color == 3) {
-        ctx.fillStyle = "red";
-        ctx.fillRect(x, y, ancho, ancho);
-    }
+    ctx.stroke();
+    //imageObj.src = mapaUrl;
 }
 
 function onclick(ctx, e, mapa) {
-    var x = Math.round((e.offsetX - e.offsetX % ancho ));
-    var y = Math.round((e.offsetY - e.offsetY % ancho ));
+    var x = e.offsetX;
+    var y = e.offsetY;
 
-    escribirEnConsola((event.which === 1 ? 'Activa: ' : 'Desactiva: ') + x + '/' + y);
-    drawCelda(ctx, x, y, event.which);
+    escribirEnConsola('Selecciona: ' + x + '/' + y);
+    var nodo = mapa.ObtenerNodo(x, y);
+    nodo.Seleccionado = true;
+    return nodo;
+}
 
-    if (event.which === 1) {
-        mapa[y][x] = 1;
-    }
-    else if (event.which === 3) {
-        mapa[y][x] = 0;
+function onMoveRigthClick(ctx, e, mapa, nodoSeleccionado) {
+    var x = e.offsetX;
+    var y = e.offsetY;
+
+    nodoSeleccionado.X = x;
+    nodoSeleccionado.Y = y;
+}
+
+function onUpLeftClick(ctx, e, mapa, nodoSeleccionado) {
+    var x = e.offsetX;
+    var y = e.offsetY;
+
+    var nodo = mapa.ObtenerNodo(x, y);
+
+    if (nodoSeleccionado !== nodo) {
+        nodoSeleccionado.NodosAsociados.push(nodo);
+        nodo.NodosAsociados.push(nodoSeleccionado);
     }
 }
 
 function escribirEnConsola(texto) {
     $("#consola").html(">" + texto + "<br />" + $("#consola").html());
-}
-
-function guardar(mapa) {
-    var texto = "";
-    var arrayLength = mapa.length;
-    for (var i = 0; i < arrayLength; i++) {
-        texto += mapa[i].join() + "\n";
-    }
-    var blob = new Blob([texto], { type: "text/plain;charset=utf-8" });
-    saveAs(blob, "mapa.txt");
-}
-
-function abrir(event) {
-    $.blockUI();
-    var input = event.target;
-    var resultado = "";
-    var reader = new FileReader();
-    reader.onload = function () {
-        resultado = reader.result;
-        console.log(reader.result.substring(0, 200));
-
-        var filas = resultado.split('\n');
-        var mapaAux = [];
-        var arrayLength = filas.length;
-        for (var i = 0; i < arrayLength; i++) {
-            mapaAux.push(filas[i].split(','));
-        }
-
-        var canvas = document.getElementById('myCanvas');
-        var ctx = canvas.getContext('2d');
-        drawCanvas(ctx, mapaAux);
-        $.unblockUI();
-    };
-    reader.readAsText(input.files[0]);    
 }
