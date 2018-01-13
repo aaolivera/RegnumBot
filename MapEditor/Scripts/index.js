@@ -5,10 +5,16 @@
     self.Y = y;
     self.HayInterseccion = function (x, y) {
         var distancia = Math.sqrt((self.X - x) * (self.X - x) + (self.Y - y) * (self.Y - y));
-        return distancia <= self.Radio * 2 - 1;
+        return distancia <= self.Radio * 2;
     }
     self.Seleccionado = false;
     self.NodosAsociados = [];
+}
+
+function N(x, y) {
+    var self = this;
+    self.X = x;
+    self.Y = y;
 }
 
 function Mapa() {
@@ -43,8 +49,9 @@ function Mapa() {
 
 }
 
+var mapa = new Mapa();
 $(document).ready(function () {
-    var mapa = new Mapa();
+    
     var canvas = document.getElementById('myCanvas');
     var ctx = canvas.getContext('2d');
     drawCanvas(ctx, canvas, mapa);
@@ -87,6 +94,13 @@ $(document).ready(function () {
     }
     document.addEventListener('contextmenu', event => event.preventDefault());
 
+    $("#guardar").click(function () {
+        guardar(mapa);
+    });
+
+    $("#abrir").click(function () {
+        document.getElementById('abrirOculto').click();
+    });
 });
 
 function drawCanvas(ctx, canvas, mapa) {
@@ -139,10 +153,53 @@ function onUpLeftClick(ctx, e, mapa, nodoSeleccionado) {
 
     if (nodoSeleccionado !== nodo) {
         nodoSeleccionado.NodosAsociados.push(nodo);
-        nodo.NodosAsociados.push(nodoSeleccionado);
     }
 }
 
 function escribirEnConsola(texto) {
     $("#consola").html(">" + texto + "<br />" + $("#consola").html());
+}
+
+function guardar(mapa) {
+    var nodosExport = [];
+    for (var i = 0; i < mapa.Nodos.length; i++) {
+        var nodo = mapa.Nodos[i];
+        var n = new Nodo(nodo.X, nodo.Y);
+
+        for (var j = 0; j < nodo.NodosAsociados.length; j++) {
+            var nodor = new N(nodo.NodosAsociados[j].X, nodo.NodosAsociados[j].Y);
+            n.NodosAsociados.push(nodor);
+        }
+        nodosExport.push(n);
+    }
+    var texto = JSON.stringify(nodosExport);
+    var blob = new Blob([texto], { type: "text/plain;charset=utf-8" });
+    saveAs(blob, "mapa.txt");
+}
+
+function abrir(event) {
+    $.blockUI();
+    var input = event.target;
+    var resultado = "";
+    var reader = new FileReader();
+    reader.onload = function () {
+        resultado = reader.result;
+        console.log(reader.result.substring(0, 200));
+
+        var nodos = JSON.parse(resultado);
+
+        for (var i = 0; i < nodos.length; i++) {
+            var nodo = mapa.ObtenerNodo(nodos[i].X, nodos[i].Y);
+            for (var j = 0; j < nodos[i].NodosAsociados.length; j++) {
+                var asociado = mapa.ObtenerNodo(nodos[i].NodosAsociados[j].X, nodos[i].NodosAsociados[j].Y);
+                nodo.NodosAsociados.push(asociado);
+            }
+        }
+        
+        var canvas = document.getElementById('myCanvas');
+        var ctx = canvas.getContext('2d');
+        drawCanvas(ctx, canvas, mapa);
+        $.unblockUI();
+    };
+    reader.readAsText(input.files[0]);
 }
