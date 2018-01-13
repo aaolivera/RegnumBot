@@ -31,3 +31,8 @@
 body {
     background-color: gray;
 }
+
+#myCanvas {
+    background-image: url('../Img/Mapa.jpg');
+    background-size: contain;
+}

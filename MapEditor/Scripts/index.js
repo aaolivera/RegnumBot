@@ -1,11 +1,11 @@
 ﻿function Nodo(x, y) {
     var self = this;
-    self.Radio = 6;
+    self.Radio = 3;
     self.X = x;
     self.Y = y;
     self.HayInterseccion = function (x, y) {
         var distancia = Math.sqrt((self.X - x) * (self.X - x) + (self.Y - y) * (self.Y - y));
-        return distancia <= self.Radio;
+        return distancia <= self.Radio * 2 - 1;
     }
     self.Seleccionado = false;
     self.NodosAsociados = [];
@@ -47,24 +47,33 @@ $(document).ready(function () {
     var mapa = new Mapa();
     var canvas = document.getElementById('myCanvas');
     var ctx = canvas.getContext('2d');
-    //drawCanvas(ctx, mapa);
+    drawCanvas(ctx, canvas, mapa);
 
 
     var mouseIsDown = false;
-    var nodoSeleccionado;
+    var nodoSeleccionado = null;
     canvas.onmousedown = function (e) {
         if (event.which === 1 || event.which === 3) {
             mouseIsDown = true;
-            nodoSeleccionado = onclick(ctx, e, mapa);
+            nodoSeleccionado = onclick(ctx, e, mapa, nodoSeleccionado);
             drawCanvas(ctx, canvas, mapa);
         }
     }
+
     canvas.onmouseup = function (e) {
         mouseIsDown = false;
+        if (nodoSeleccionado !== null) {
+            nodoSeleccionado.Seleccionado = false;
+        }
+        
         if (event.which === 1) {
             onUpLeftClick(ctx, e, mapa, nodoSeleccionado);
+        }
+
+        if (nodoSeleccionado !== null || event.which === 1) {
             drawCanvas(ctx, canvas, mapa);
         }
+        
         return false;
     }
 
@@ -72,6 +81,7 @@ $(document).ready(function () {
         if (!mouseIsDown) return;
         if(event.which === 3) {
             onMoveRigthClick(ctx, e, mapa, nodoSeleccionado);
+            drawCanvas(ctx, canvas, mapa);
         }
         return false;
     }
@@ -81,33 +91,32 @@ $(document).ready(function () {
 
 function drawCanvas(ctx, canvas, mapa) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    //var imageObj = new Image();
-
-    //imageObj.onload = function () {
-    //    //Dibujo imagen
-    //    //ctx.drawImage(imageObj, 0, 0, imageObj.width / 3, imageObj.height / 3);
-
-    //    //Dibujo los caminos
-        
-    //};
-
+    ctx.stroke();
     for (var i = 0; i < mapa.Nodos.length; i++) {
         var nodo = mapa.Nodos[i];
         ctx.beginPath();
         ctx.arc(nodo.X, nodo.Y, nodo.Radio, 0, 2 * Math.PI);
-        ctx.fillStyle = 'orange';
+        ctx.fillStyle = nodo.Seleccionado ? 'red' : 'orange';
         ctx.fill();
-        ctx.lineWidth = nodo.Seleccionado ? 4 : 2;
-        ctx.strokeStyle = 'black';
+        ctx.stroke();
     }
-    ctx.stroke();
-    //imageObj.src = mapaUrl;
+    for (var i = 0; i < mapa.Nodos.length; i++) {
+        var nodo = mapa.Nodos[i];
+        for (var j = 0; j < nodo.NodosAsociados.length; j++) {
+            ctx.beginPath();
+            ctx.moveTo(nodo.X, nodo.Y);
+            ctx.lineTo(nodo.NodosAsociados[j].X, nodo.NodosAsociados[j].Y);
+            ctx.stroke();
+        }
+    }
 }
 
-function onclick(ctx, e, mapa) {
+function onclick(ctx, e, mapa, nodoSeleccionado) {
     var x = e.offsetX;
     var y = e.offsetY;
-
+    if (nodoSeleccionado !== null) {
+        nodoSeleccionado.Seleccionado = false;
+    }
     escribirEnConsola('Selecciona: ' + x + '/' + y);
     var nodo = mapa.ObtenerNodo(x, y);
     nodo.Seleccionado = true;
