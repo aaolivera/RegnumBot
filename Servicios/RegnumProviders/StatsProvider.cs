@@ -11,7 +11,6 @@ namespace Servicios.RegnumProviders
     public class StatsProvider : RegnumProvider
     {
         private Rectangle _posicionStats;
-        private bool encontrados = false;
         public StatsProvider(FrameProvider frameProvider) : base(frameProvider, null)
         {
             this._posicionStats = new Rectangle(0, 0, 220, 200);

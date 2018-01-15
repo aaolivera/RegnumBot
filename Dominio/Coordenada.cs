@@ -9,7 +9,7 @@ namespace Dominio
 {
     public class Coordenada
     {
-        public Point Posicion { get; set; }
+        public Point Posicion { get; set; }        
         public decimal Direccion { get; set; }
     }
 }

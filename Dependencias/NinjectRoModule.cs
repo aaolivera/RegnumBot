@@ -18,6 +18,8 @@ namespace Dependencias
             Bind(typeof(ObjetivoProvider)).To(typeof(ObjetivoProvider)).InSingletonScope();
             Bind(typeof(PiedraProvider)).To(typeof(PiedraProvider)).InSingletonScope();
             Bind(typeof(StatsProvider)).To(typeof(StatsProvider)).InSingletonScope();
+            Bind(typeof(AventuraProvider)).To(typeof(AventuraProvider)).InSingletonScope();
+            Bind(typeof(MapaProvider)).To(typeof(MapaProvider)).InSingletonScope();
         }
     }
 }

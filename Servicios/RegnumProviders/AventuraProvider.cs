@@ -9,11 +9,9 @@ namespace Servicios.RegnumProviders
     public class AventuraProvider : RegnumProvider
     {
         private Rectangle _posicionCoordenadas;
-        private bool _encontradas;
         public AventuraProvider(FrameProvider frameProvider, MouseProvider mouseProvider) : base(frameProvider, mouseProvider)
         {
             this._posicionCoordenadas = new Rectangle(0, 0, 320, 90);
-            this._encontradas = false;
         }
 
         public Aventura Obtener()

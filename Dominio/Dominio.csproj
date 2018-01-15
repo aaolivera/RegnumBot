@@ -42,9 +42,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Aventura.cs" />
+    <Compile Include="Mapa.cs" />
+    <Compile Include="Nodo.cs" />
     <Compile Include="Stats.cs" />
     <Compile Include="Coordenada.cs" />
-    <Compile Include="Datos.cs" />
     <Compile Include="Handlers\EventType.cs" />
     <Compile Include="Handlers\IFrameEventHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

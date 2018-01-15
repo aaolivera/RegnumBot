@@ -17,8 +17,9 @@ namespace RegnumBotWin
         private readonly ObjetivoProvider objetivoProvider;
         private readonly PiedraProvider piedraProvider;
         private readonly AventuraProvider aventuraProvider;
+        private readonly MapaProvider mapaProvider;
 
-        public Form1(CoordenadasProvider coordenadasProvider, StatsProvider statsProvider, ObjetivoProvider objetivoProvider, PiedraProvider piedraProvider, AventuraProvider aventuraProvider)
+        public Form1(CoordenadasProvider coordenadasProvider, StatsProvider statsProvider, ObjetivoProvider objetivoProvider, PiedraProvider piedraProvider, AventuraProvider aventuraProvider, MapaProvider mapaProvider)
         {
             InitializeComponent();
             this.coordenadasProvider = coordenadasProvider;
@@ -26,6 +27,7 @@ namespace RegnumBotWin
             this.objetivoProvider = objetivoProvider;
             this.piedraProvider = piedraProvider;
             this.aventuraProvider = aventuraProvider;
+            this.mapaProvider = mapaProvider;
         }
 
         private void Form1_Load(object sender, EventArgs e)
