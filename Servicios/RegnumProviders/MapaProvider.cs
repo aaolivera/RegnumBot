@@ -27,6 +27,7 @@ namespace Servicios.RegnumProviders
 
             foreach(var nodo in nodos)
             {
+                if (Nodo.RadioGeneral == 0) Nodo.RadioGeneral = nodo.Radio;
                 mapa.AgregarNodo(nodo);
             }
         }
@@ -36,9 +37,9 @@ namespace Servicios.RegnumProviders
             var coordenadaActual = coordenadasProvider.Obtener();
         }
 
-        public void DefinirCamino(Point desde, Point destino)
+        public List<Nodo> DefinirCamino(Point desde, Point destino)
         {
-
+            return mapa.DefinirCamino(desde, destino);
         }
     }
 }

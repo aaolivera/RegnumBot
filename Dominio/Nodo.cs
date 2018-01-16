@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,15 +21,29 @@ namespace Dominio
             NodosAsociados = new List<Nodo>();
         }
 
+        public static int RadioGeneral { get; set; }
         public int Radio { get; set; }
         public int X { get; set; }
         public int Y { get; set; }
         public List<Nodo> NodosAsociados { get; set; }
 
-        public bool HayInterseccion(int x, int y)
+        public double Peso { get; set; }
+        public bool Marcado { get; set; }
+        public Nodo Anterior { get; set; }
+
+        public bool HayInterseccion(Point p)
         {
-            var distancia = Math.Sqrt((X - x) * (X - x) + (Y - y) * (Y - y));
-            return distancia <= Radio * 2;
+            return Distancia(p) <= RadioGeneral * 2;
+        }
+
+        public double Distancia(Point p)
+        {
+            return Math.Sqrt((X - p.X) * (X - p.X) + (Y - p.Y) * (Y - p.Y));
+        }
+
+        public double Distancia(Nodo p)
+        {
+            return Distancia(new Point(p.X, p.Y));
         }
 
         public void AgregarAsociado(Nodo nodo)

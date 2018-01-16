@@ -41,8 +41,10 @@ namespace RegnumBotWin
             statsProvider.RegistrarHandler(EventType.StatsBitmap, new FrameEventHandler(VidaImg));
             objetivoProvider.RegistrarHandler(EventType.ObjetivoBitmap, new FrameEventHandler(VidaImg));
             piedraProvider.RegistrarHandler(EventType.PiedraBitmap, new FrameEventHandler(pictureBox1));
+
+            var camino = mapaProvider.DefinirCamino(new Point(1,2), new Point(21, 134));
         }
-        
+
         private void ObtenerStats()
         {
             var encontrada = statsProvider.Obtener();
