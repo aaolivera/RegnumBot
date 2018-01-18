@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using Ninject.Extensions.Logging;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -14,13 +15,13 @@ namespace Servicios.RegnumProviders
         private readonly MoverPjProvider moverPjProvider;
         private readonly Mapa mapa;
 
-        public MapaProvider(CoordenadasProvider coordenadasProvider, MoverPjProvider moverPjProvider) : base(null, null)
+        public MapaProvider(CoordenadasProvider coordenadasProvider, MoverPjProvider moverPjProvider, ILogger log) : base(null, null, log)
         {
             this.coordenadasProvider = coordenadasProvider;
             this.moverPjProvider = moverPjProvider;
             this.mapa = new Mapa();
 
-            var _filePath = Path.GetDirectoryName(System.AppDomain.CurrentDomain.BaseDirectory);
+            var _filePath = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory);
             List<Nodo> nodos;
             using (var streamReader = File.OpenText(_filePath + "\\Mapa\\mapa.txt"))
             {
@@ -38,13 +39,28 @@ namespace Servicios.RegnumProviders
         public void Mover(Point destino)
         {
             var coordenadaActual = coordenadasProvider.Obtener();
-        }
 
+            var nodoExistente = mapa.ObtenerNodo(coordenadaActual.Posicion);
+            if(nodoExistente == null)
+            {
+                mapa.AgregarNodoAsociadoAlCercano(new Nodo(coordenadaActual.Posicion.X, coordenadaActual.Posicion.Y));
+            }
+
+            var camino = DefinirCamino(coordenadaActual.Posicion, destino);
+
+            foreach (var nodo in camino)
+            {
+                MoverANodo(coordenadaActual, nodo);
+            }
+        }
+        
         private void MoverANodo(Coordenada posActual, Nodo destino)
         {
             AlinearADestino(posActual, destino);
             var distancia = destino.Distancia(posActual.Posicion);
             moverPjProvider.Avanzar(distancia);
+
+            posActual.Posicion = new Point(destino.X, destino.Y);
         }
 
         private void AlinearADestino(Coordenada posActual, Nodo destino)
@@ -66,6 +82,8 @@ namespace Servicios.RegnumProviders
                     moverPjProvider.Girar(false, diferencia);
                 }
             }
+
+            posActual.Direccion = anguloEnRad;
         }
 
         public List<Nodo> DefinirCamino(Point desde, Point destino)

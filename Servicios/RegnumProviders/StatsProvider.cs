@@ -1,5 +1,6 @@
 ﻿using Dominio;
 using Dominio.Handlers;
+using Ninject.Extensions.Logging;
 using Servicios.InternalProviders;
 using System;
 using System.Drawing;
@@ -11,7 +12,7 @@ namespace Servicios.RegnumProviders
     public class StatsProvider : RegnumProvider
     {
         private Rectangle _posicionStats;
-        public StatsProvider(FrameProvider frameProvider) : base(frameProvider, null)
+        public StatsProvider(FrameProvider frameProvider, ILogger log) : base(frameProvider, null, log)
         {
             this._posicionStats = new Rectangle(0, 0, 220, 200);
         }

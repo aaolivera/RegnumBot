@@ -43,6 +43,25 @@ namespace Dominio
             return nodo;
         }
 
+        public void AgregarNodoAsociadoAlCercano(Nodo n)
+        {
+            Nodo nodoCercano = null;
+            double distancia = 99999;
+            foreach (var na in Nodos)
+            {
+                var nuevaDistancia = na.Distancia(n);
+                if (nuevaDistancia < distancia)
+                {
+                    nodoCercano = na;
+                    distancia = nuevaDistancia;
+                }
+            }
+
+            n.AgregarAsociado(nodoCercano);
+            nodoCercano.AgregarAsociado(n);
+            Nodos.Add(n);
+        }
+
         public List<Nodo> DefinirCamino(Point desde, Point destino)
         {
             foreach(var n in Nodos)

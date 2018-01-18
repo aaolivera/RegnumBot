@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using Dominio.Handlers;
+using Ninject.Extensions.Logging;
 using Servicios.InternalProviders;
 using Tesseract;
 
@@ -12,12 +13,14 @@ namespace Servicios.RegnumProviders
     {
         protected readonly FrameProvider _frameProvider;
         protected readonly MouseProvider _mouseProvider;
+        protected readonly ILogger _log;
         protected readonly Dictionary<EventType, List<IFrameEventHandler>> _frameEventHandlers;
         
-        protected RegnumProvider(FrameProvider frameProvider, MouseProvider mouseProvider)
+        protected RegnumProvider(FrameProvider frameProvider, MouseProvider mouseProvider, ILogger log)
         {
             this._frameProvider = frameProvider;
             this._mouseProvider = mouseProvider;
+            this._log = log;
             this._frameEventHandlers = new Dictionary<EventType, List<IFrameEventHandler>>();
         }
 
