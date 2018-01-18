@@ -1,4 +1,5 @@
 ﻿using Dominio.Handlers;
+using Ninject.Extensions.Logging;
 using Servicios.InternalProviders;
 using System;
 using System.Drawing;
@@ -10,7 +11,7 @@ namespace Servicios.RegnumProviders
     public class ObjetivoProvider : RegnumProvider
     {
 
-        public ObjetivoProvider(FrameProvider frameProvider, MouseProvider mouseProvider) : base(frameProvider, mouseProvider)
+        public ObjetivoProvider(FrameProvider frameProvider, MouseProvider mouseProvider, ILogger log) : base(frameProvider, mouseProvider, log)
         {
         }
 

@@ -1,5 +1,6 @@
 ﻿using Dominio;
 using Dominio.Handlers;
+using Ninject.Extensions.Logging;
 using Servicios.InternalProviders;
 using System.Drawing;
 using System.Text.RegularExpressions;
@@ -9,7 +10,7 @@ namespace Servicios.RegnumProviders
     public class AventuraProvider : RegnumProvider
     {
         private Rectangle _posicionCoordenadas;
-        public AventuraProvider(FrameProvider frameProvider, MouseProvider mouseProvider) : base(frameProvider, mouseProvider)
+        public AventuraProvider(FrameProvider frameProvider, MouseProvider mouseProvider, ILogger log) : base(frameProvider, mouseProvider, log)
         {
             this._posicionCoordenadas = new Rectangle(0, 0, 320, 90);
         }

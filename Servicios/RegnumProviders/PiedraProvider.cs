@@ -1,4 +1,5 @@
 ﻿using Dominio.Handlers;
+using Ninject.Extensions.Logging;
 using Servicios.InternalProviders;
 using System;
 using System.Drawing;
@@ -12,7 +13,7 @@ namespace Servicios.RegnumProviders
     public class PiedraProvider : RegnumProvider
     {
 
-        public PiedraProvider(FrameProvider frameProvider, MouseProvider mouseProvider) : base(frameProvider, mouseProvider)
+        public PiedraProvider(FrameProvider frameProvider, MouseProvider mouseProvider, ILogger log) : base(frameProvider, mouseProvider, log)
         {
         }
 
