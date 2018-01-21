@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dependencias", "Dependencia
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapEditor", "MapEditor\MapEditor.csproj", "{47511DA5-FA09-4862-81D0-E3800356FE0B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegnumBotCartero", "RegnumBotCartero\RegnumBotCartero.csproj", "{FA9FD7DC-F108-4789-96CD-1C31776E53D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{47511DA5-FA09-4862-81D0-E3800356FE0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47511DA5-FA09-4862-81D0-E3800356FE0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{47511DA5-FA09-4862-81D0-E3800356FE0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA9FD7DC-F108-4789-96CD-1C31776E53D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA9FD7DC-F108-4789-96CD-1C31776E53D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA9FD7DC-F108-4789-96CD-1C31776E53D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA9FD7DC-F108-4789-96CD-1C31776E53D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

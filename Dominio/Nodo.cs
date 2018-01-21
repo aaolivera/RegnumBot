@@ -50,8 +50,10 @@ namespace Dominio
         {
             if (!NodosAsociados.Contains(nodo)) NodosAsociados.Add(nodo);
         }
-        //public bool Seleccionado { get; set; }
-        //public decimal Direccion { get; set; }
-        //public decimal Direccion { get; set; }
+
+        public override string ToString()
+        {
+            return $"({X},{Y})";
+        }
     }
 }

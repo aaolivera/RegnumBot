@@ -34,5 +34,5 @@ body {
 
 #myCanvas {
     background-image: url('../Img/Mapa.jpg');
-    background-size: contain;
+    background-size: 100% 104.4%;
 }

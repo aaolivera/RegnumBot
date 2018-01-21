@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Ext\ImageExtensions.cs" />
     <Compile Include="InternalProviders\ColorProvider.cs" />
+    <Compile Include="InternalProviders\KeyProvider.cs" />
     <Compile Include="InternalProviders\FrameProvider.cs" />
     <Compile Include="InternalProviders\MouseProvider.cs" />
     <Compile Include="RegnumProviders\MoverPjProvider.cs" />

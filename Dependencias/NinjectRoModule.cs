@@ -12,6 +12,7 @@ namespace Dependencias
         {
             Bind(typeof(FrameProvider)).To(typeof(FrameProvider)).InSingletonScope().WithConstructorArgument("processName", "ROClientGame");
             Bind(typeof(MouseProvider)).To(typeof(MouseProvider)).InSingletonScope().WithConstructorArgument("processName", "ROClientGame");
+            Bind(typeof(KeyProvider)).To(typeof(KeyProvider)).InSingletonScope().WithConstructorArgument("processName", "ROClientGame");
             Bind(typeof(ColorProvider)).To(typeof(ColorProvider)).InSingletonScope();
 
             Bind(typeof(CoordenadasProvider)).To(typeof(CoordenadasProvider)).InSingletonScope();

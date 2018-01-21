@@ -6,6 +6,7 @@ using Ninject.Extensions.Logging;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using Dominio.Helper;
 
 namespace Servicios.RegnumProviders
 {
@@ -38,7 +39,7 @@ namespace Servicios.RegnumProviders
 
         public void Mover(Point destino)
         {
-            var coordenadaActual = coordenadasProvider.Obtener();
+            var coordenadaActual = ObtenerCoordenada();
 
             var nodoExistente = mapa.ObtenerNodo(coordenadaActual.Posicion);
             if(nodoExistente == null)
@@ -48,12 +49,29 @@ namespace Servicios.RegnumProviders
 
             var camino = DefinirCamino(coordenadaActual.Posicion, destino);
 
+            _log.Info($"Camino: {camino.ExtendedToString()}");
             foreach (var nodo in camino)
             {
-                MoverANodo(coordenadaActual, nodo);
+                if (!nodo.HayInterseccion(coordenadaActual.Posicion))
+                {
+                    MoverANodo(coordenadaActual, nodo);
+                }
             }
         }
-        
+
+        private Coordenada ObtenerCoordenada()
+        {
+            _log.Info("Obteniendo coordenada");
+            Coordenada coordenada = null;
+            while (coordenada == null)
+            {
+                coordenada = coordenadasProvider.Obtener();
+                _log.Info("Coordenadas no encontradas");
+            }
+            _log.Info($"Coordenada: {coordenada}");
+            return coordenada;
+        }
+
         private void MoverANodo(Coordenada posActual, Nodo destino)
         {
             AlinearADestino(posActual, destino);
@@ -73,14 +91,7 @@ namespace Servicios.RegnumProviders
             if(posActual.Direccion != anguloEnRad)
             {
                 var diferencia = posActual.Direccion - anguloEnRad;
-                if(diferencia <= 3)
-                {
-                    moverPjProvider.Girar(true, diferencia);
-                }
-                else
-                {
-                    moverPjProvider.Girar(false, diferencia);
-                }
+                moverPjProvider.Girar(diferencia);
             }
 
             posActual.Direccion = anguloEnRad;
